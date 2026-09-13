@@ -8,7 +8,7 @@ public class RegistrarEstudiante {
     }
 
     // Crear un estudiante con una Carrera valida.
-    public boolean registrarEstudiante(String nombre, String apellido, Carrera carrera, int carnet) {
+    public boolean registrarEstudiante(String nombre, String apellido, Carrera carrera, int carnet) {    
         return false;
     }
 
@@ -44,4 +44,8 @@ public class RegistrarEstudiante {
     public List<EstudianteData> getEstudiantes() {
         return lista.getEstudiantes();
     }
+
+    //public static void main(String[] args) {
+     //   System.out.println("Harry kane balon de oro");
+   // }
 }

@@ -17,13 +17,21 @@ public enum Carrera {
     public String getDescripcion() {
         return descripcion;
     }
-
-    //convertir texto ingresado a un valor del enum.
+    
     public static Carrera fromString(String texto) {
-        // 1. Validar texto.
-        // 2. Normalizar mayusculas/minusculas.
-        // 3. Recorrer valores del enum.
-        // 4. Devolver la carrera encontrada o null si no existe.
+        if (texto == null ||texto.trim().isEmpty()) {
+            return null;
+        }
+      
+        String textoNormalizado = texto.trim().toUpperCase();
+        for (Carrera carrera : Carrera.values()) {
+            if (carrera.name().equals(textoNormalizado))
+            carrera.getDescripcion().equalsIgnoreCase(texto.trim()); {
+                return carrera;
+            }
+            
+        }
+
         return null;
     }
 }
