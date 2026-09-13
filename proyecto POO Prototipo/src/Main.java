@@ -28,15 +28,15 @@ public class Main {
             ArrayList<EstudianteData> estudiantesRegistrados) {
     }
 
-    //  consultar la lista completa.
+    // consultar la lista completa.
     public static void consultarEstudiantes(RegistrarEstudiante registrar) {
     }
 
-    //  eliminar estudiante por carnet.
+    // eliminar estudiante por carnet.
     public static void eliminarEstudiante(Scanner scanner, RegistrarEstudiante registrar) {
     }
 
-    //  buscar por carnet.
+    // buscar por carnet.
     public static void buscarEstudiante(Scanner scanner, RegistrarEstudiante registrar) {
     }
 }
