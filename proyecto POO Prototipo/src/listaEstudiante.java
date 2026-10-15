@@ -8,13 +8,21 @@ public class listaEstudiante {
         this.estudiantes = new ArrayList<>();
     }
 
-    // agregar estudiante a la lista.
     public boolean addEstudiante(EstudianteData estudiante) {
-        return false;
+        if (estudiante == null) {
+            return false;
+        }
+        estudiantes.add(estudiante);
+        return true;
     }
 
-    // eliminar estudiante de la lista por carnet.
     public boolean eliminarPorCarnet(int carnet) {
+        for (int i = 0; i < estudiantes.size(); i++) {
+            if (estudiantes.get(i).getCarnet() == carnet) {
+                estudiantes.remove(i);
+                return true;
+            }
+        }
         return false;
     }
 
@@ -26,13 +34,22 @@ public class listaEstudiante {
         return estudiantes;
     }
 
-    // filtrar estudiantes por carrera.
     public List<EstudianteData> getCarreraEstudiante(Carrera carrera) {
-        return new ArrayList<>();
+        List<EstudianteData> filtrados = new ArrayList<>();
+        for (EstudianteData estudiante : estudiantes) {
+            if (estudiante.getCarrera() == carrera) {
+                filtrados.add(estudiante);
+            }
+        }
+        return filtrados;
     }
 
-    //buscar estudiante por numero de carnet.
     public EstudianteData buscarPorCarnet(int carnet) {
+        for (EstudianteData estudiante : estudiantes) {
+            if (estudiante.getCarnet() == carnet) {
+                return estudiante;
+            }
+        }
         return null;
     }
 }
