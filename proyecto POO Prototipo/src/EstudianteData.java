@@ -50,6 +50,6 @@ public class EstudianteData {
     // Ejercicio: construir representacion del estudiante.
     @Override
     public String toString() {
-        return "";
+        return nombre + " " + apellido + " | " + carrera + " | Carnet " + carnet;
     }
 }
