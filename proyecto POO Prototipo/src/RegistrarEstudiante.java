@@ -1,43 +1,50 @@
 import java.util.List;
 
 public class RegistrarEstudiante {
-    private listaEstudiante lista;
+    private ListaEstudiante lista;
 
     public RegistrarEstudiante() {
-        this.lista = new listaEstudiante();
+        this.lista = new ListaEstudiante();
     }
 
-    // Crear un estudiante con una Carrera valida.
     public boolean registrarEstudiante(String nombre, String apellido, Carrera carrera, int carnet) {
-        return false;
+        if (carrera == null) return false;
+        EstudianteData nuevo = new EstudianteData(nombre, apellido, carrera, carnet);
+        return lista.addEstudiante(nuevo);
     }
 
-    // Crear un estudiante con texto de carrera e internamente convertirlo.
     public boolean registrarEstudiante(String nombre, String apellido, String carreraTexto, int carnet) {
-        return false;
+        Carrera carrera = Carrera.fromString(carreraTexto);
+        if (carrera == null) return false;
+        EstudianteData nuevo = new EstudianteData(nombre, apellido, carrera, carnet);
+        return lista.addEstudiante(nuevo);
     }
 
-    // Eliminar estudiante por carnet.
     public boolean eliminarEstudiantePorCarnet(int carnet) {
-        return false;
+        return lista.eliminarPorCarnet(carnet);
     }
 
-    // Buscar estudiante por carnet.
     public EstudianteData buscarEstudiantePorCarnet(int carnet) {
-        return null;
+        return lista.buscarPorCarnet(carnet);
     }
 
-    // Mostrar la informacion de un estudiante por carnet.
     public void carnetEstudiante(int carnet) {
-        // usar lista.buscarPorCarnet(carnet)
+        EstudianteData e = lista.buscarPorCarnet(carnet);
+        if (e != null) {
+            System.out.println(e.toString());
+        } else {
+            System.out.println("No encontrado");
+        }
     }
 
-    // Mostrar todos los estudiantes de una carrera.
     public void carreraEstudiante(Carrera carrera) {
-        // usar lista.getCarreraEstudiante(carrera)
+        List<EstudianteData> filtrados = lista.getCarreraEstudiante(carrera);
+        for (EstudianteData e : filtrados) {
+            System.out.println(e.toString());
+        }
     }
 
-    public listaEstudiante getListaEstudiante() {
+    public ListaEstudiante getListaEstudiante() {
         return lista;
     }
 
