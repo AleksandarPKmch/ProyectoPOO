@@ -1,91 +1,169 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        // Crear Scanner.
         Scanner scanner = new Scanner(System.in);
-        // Crear objeto RegistrarEstudiante.
         RegistrarEstudiante registrar = new RegistrarEstudiante();
-        // Crear ArrayList<EstudianteData> para almacenar estudiantes.
         ArrayList<EstudianteData> estudiantesRegistrados = new ArrayList<>();
-        // Mostrar menu y repetir hasta salir.
-        int opcion;
-        do {
-            System.out.println("   Sistema de Registro de Estudiantes   ");
-            System.out.println("1. Registrar cantidad de estudiantes");
-            System.out.println("2. Registrar estudiante");
-            System.out.println("3. Consultar estudiantes");
-            System.out.println("4. Eliminar estudiante");
-            System.out.println("5. Buscar estudiante");
-            System.out.println("6. Salir");
+
+        int opcion = -1;
+        while (opcion != 0) {
+            mostrarMenu();
             opcion = leerOpcion(scanner);
-        } while (opcion != 6);
+
+            switch (opcion) {
+                case 1:
+                    registrarCantidad(scanner, registrar, estudiantesRegistrados);
+                    break;
+                case 2:
+                    consultarEstudiantes(registrar);
+                    break;
+                case 3:
+                    eliminarEstudiante(scanner, registrar);
+                    break;
+                case 4:
+                    agregarEstudiante(scanner, registrar, estudiantesRegistrados);
+                    break;
+                case 5:
+                    buscarEstudiante(scanner, registrar);
+                    break;
+                case 0:
+                    System.out.println("Saliendo del sistema...");
+                    break;
+                default:
+                    System.out.println("Opcion invalida. Intente de nuevo.");
+                    break;
+            }
+        }
     }
 
-    // Mostrar las opciones del menu.
-    public static void mostrarMenu() {
-
+    private static void mostrarMenu() {
+        System.out.println("\n===== MENU ESTUDIANTES =====");
+        System.out.println("1. Registrar cantidad de estudiantes (Varios)");
+        System.out.println("2. Consultar estudiantes registrados");
+        System.out.println("3. Eliminar estudiante por numero de carnet");
+        System.out.println("4. Agregar estudiante (Solo uno)");
+        System.out.println("5. Buscar estudiante");
+        System.out.println("0. Salir");
+        System.out.print("Seleccione una opcion: ");
     }
 
-    // Leer opcion del usuario.
-    public static int leerOpcion(Scanner scanner) {
-        return scanner.nextInt();
+    private static int leerOpcion(Scanner scanner) {
+        try {
+            int opcion = scanner.nextInt();
+            scanner.nextLine();
+            return opcion;
+        } catch (InputMismatchException e) {
+            scanner.nextLine();
+            return -1;
+        }
     }
 
-    // registrar una cantidad de estudiantes.
-    public static void registrarCantidad(Scanner scanner, RegistrarEstudiante registrar,
+    private static void registrarCantidad(Scanner scanner, RegistrarEstudiante registrar,
             ArrayList<EstudianteData> estudiantesRegistrados) {
-        System.out.print("Ingrese la cantidad de estudiantes a registrar: ");
-        int cantidad = scanner.nextInt();
+        System.out.print("Cuantos estudiantes desea registrar? ");
+        int cantidad;
+        try {
+            cantidad = scanner.nextInt();
+            scanner.nextLine();
+        } catch (InputMismatchException e) {
+            scanner.nextLine();
+            System.out.println("Debe ingresar un numero entero.");
+            return;
+        }
+
+        if (cantidad <= 0) {
+            System.out.println("La cantidad debe ser mayor que 0.");
+            return;
+        }
+
         for (int i = 0; i < cantidad; i++) {
-            registrarEstudiante(scanner, registrar, estudiantesRegistrados);
+            System.out.println("\nRegistro estudiante " + (i + 1));
+            agregarEstudiante(scanner, registrar, estudiantesRegistrados);
         }
     }
 
-    // agregar un estudiante usando el Scanner.
-    public static void registrarEstudiante(Scanner scanner, RegistrarEstudiante registrar,
+    private static void agregarEstudiante(Scanner scanner, RegistrarEstudiante registrar,
             ArrayList<EstudianteData> estudiantesRegistrados) {
-        System.out.print("Ingrese el nombre del estudiante: ");
-        String nombre = scanner.next();
-        System.out.print("Ingrese el apellido del estudiante: ");
-        String apellido = scanner.next();
-        System.out.print("Ingrese la carrera del estudiante: ");
-        Carrera carrera = Carrera.valueOf(scanner.next().toUpperCase());
-        System.out.print("Ingrese el carnet del estudiante: ");
-        int carnet = scanner.nextInt();
-        EstudianteData estudiante = new EstudianteData(nombre, apellido, carrera, carnet);
-        estudiantesRegistrados.add(estudiante);
-    }
+        System.out.print("Nombre: ");
+        String nombre = scanner.nextLine();
 
-    // consultar la lista completa.
-    public static void consultarEstudiantes(RegistrarEstudiante registrar) {
-        for (EstudianteData e : registrar.getListaEstudiante()) {
-            System.out.println(e.toString());
+        System.out.print("Apellido: ");
+        String apellido = scanner.nextLine();
+
+        System.out.print("Carrera: (Carreras disponibles: INGENIERIA, EDUCACION, CIENCIAS Y HUMANIDADES, BUSINESS, CIENCIAS SOCIALES, ART SCHOOL, COLEGIO, ARQUITECTURA\n)");
+        String carreraTexto = scanner.nextLine();
+
+        Carrera carrera = Carrera.fromString(carreraTexto);
+        if (carrera == null) {
+            System.out.println("Carrera invalida. Use una carrera de la lista.");
+            return;
+        }
+
+        int carnet = 1000 + registrar.getEstudiantes().size() + 1;
+        boolean ok = registrar.registrarEstudiante(nombre, apellido, carrera, carnet);
+        if (ok) {
+            EstudianteData nuevo = new EstudianteData(nombre.trim(), apellido.trim(), carrera, carnet);
+            estudiantesRegistrados.add(nuevo);
+            System.out.println("Estudiante registrado correctamente con carnet " + carnet);
+        } else {
+            System.out.println("No se pudo registrar el estudiante.");
         }
     }
 
-    // eliminar estudiante por carnet.
-    public static void eliminarEstudiante(Scanner scanner, RegistrarEstudiante registrar) {
-        System.out.print("Ingrese el carnet del estudiante a eliminar: ");
-        int carnet = scanner.nextInt();
+    private static void consultarEstudiantes(RegistrarEstudiante registrar) {
+        List<EstudianteData> estudiantes = registrar.getEstudiantes();
+        if (estudiantes.isEmpty()) {
+            System.out.println("No hay estudiantes registrados.");
+            return;
+        }
+
+        System.out.println("\nLista de estudiantes registrados:");
+        for (EstudianteData estudiante : estudiantes) {
+            System.out.println(estudiante);
+        }
+    }
+
+    private static void eliminarEstudiante(Scanner scanner, RegistrarEstudiante registrar) {
+        System.out.print("Ingrese el numero de carnet a eliminar: ");
+        int carnet;
+        try {
+            carnet = scanner.nextInt();
+            scanner.nextLine();
+        } catch (InputMismatchException e) {
+            scanner.nextLine();
+            System.out.println("Debe ingresar un numero de carnet valido.");
+            return;
+        }
+
         boolean eliminado = registrar.eliminarEstudiantePorCarnet(carnet);
         if (eliminado) {
-            System.out.println("Estudiante eliminado correctamente.");
+            System.out.println("Estudiante con carnet " + carnet + " eliminado.");
         } else {
-            System.out.println("No se encontró un estudiante con ese carnet.");
+            System.out.println("No se encontro un estudiante con carnet " + carnet + ".");
         }
     }
 
-    // buscar por carnet.
-    public static void buscarEstudiante(Scanner scanner, RegistrarEstudiante registrar) {
-        System.out.print("Ingrese el carnet del estudiante a buscar: ");
-        int carnet = scanner.nextInt();
-        EstudianteData estudiante = registrar.buscarEstudiantePorCarnet(carnet);
-        if (estudiante != null) {
-            System.out.println(estudiante.toString());
+    private static void buscarEstudiante(Scanner scanner, RegistrarEstudiante registrar) {
+        System.out.print("Ingrese el numero de carnet a buscar: ");
+        int carnet;
+        try {
+            carnet = scanner.nextInt();
+            scanner.nextLine();
+        } catch (InputMismatchException e) {
+            scanner.nextLine();
+            System.out.println("Debe ingresar un numero de carnet valido.");
+            return;
+        }
+
+        EstudianteData encontrado = registrar.buscarEstudiantePorCarnet(carnet);
+        if (encontrado == null) {
+            System.out.println("No se encontro un estudiante con carnet " + carnet + ".");
         } else {
-            System.out.println("No se encontró un estudiante con ese carnet.");
+            System.out.println("Estudiante encontrado: " + encontrado);
         }
     }
 }
