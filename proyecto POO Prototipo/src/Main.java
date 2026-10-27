@@ -94,7 +94,7 @@ public class Main {
         System.out.print("Apellido: ");
         String apellido = scanner.nextLine();
 
-        System.out.print("Carrera: (Carreras disponibles: INGENIERIA, EDUCACION, CIENCIAS Y HUMANIDADES, BUSINESS, CIENCIAS SOCIALES, ART SCHOOL, COLEGIO, ARQUITECTURA\n)");
+        System.out.print("Carrera (Elija un numero): 1. INGENIERIA, 2. EDUCACION, 3. CIENCIAS Y HUMANIDADES, 4. BUSINESS, 5. CIENCIAS SOCIALES, 6. ART SCHOOL, 7. COLEGIO, 8. ARQUITECTURA\n");
         String carreraTexto = scanner.nextLine();
 
         Carrera carrera = Carrera.fromString(carreraTexto);
@@ -112,6 +112,9 @@ public class Main {
         } else {
             System.out.println("No se pudo registrar el estudiante.");
         }
+
+        }
+
     }
 
     private static void consultarEstudiantes(RegistrarEstudiante registrar) {
@@ -166,4 +169,3 @@ public class Main {
             System.out.println("Estudiante encontrado: " + encontrado);
         }
     }
-}
