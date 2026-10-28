@@ -103,7 +103,11 @@ public class Main {
             return;
         }
 
-        int carnet = 1000 + registrar.getEstudiantes().size() + 1;
+        int carnet = 1001;
+        while (registrar.buscarEstudiantePorCarnet(carnet) != null) {
+            carnet++;
+        }
+
         boolean ok = registrar.registrarEstudiante(nombre, apellido, carrera, carnet);
         if (ok) {
             EstudianteData nuevo = new EstudianteData(nombre.trim(), apellido.trim(), carrera, carnet);
@@ -111,8 +115,6 @@ public class Main {
             System.out.println("Estudiante registrado correctamente con carnet " + carnet);
         } else {
             System.out.println("No se pudo registrar el estudiante.");
-        }
-
         }
 
     }
@@ -169,3 +171,4 @@ public class Main {
             System.out.println("Estudiante encontrado: " + encontrado);
         }
     }
+}
