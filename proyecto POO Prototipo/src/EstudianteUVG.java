@@ -1,12 +1,10 @@
-public class EstudianteUVG {
+public class EstudianteUVG extends EstudianteData {
     private boolean estudianteValido;
     private RegistrarEstudiante registrarEstudiante;
-    private EstudianteData estudianteData;
 
     public EstudianteUVG() {
         this.estudianteValido = false;
         this.registrarEstudiante = new RegistrarEstudiante();
-        this.estudianteData = new EstudianteData();
     }
 
     public boolean registrarEstudiante(String nombre, String apellido, String carrera) {
@@ -33,7 +31,10 @@ public class EstudianteUVG {
         boolean ok = registrarEstudiante.registrarEstudiante(nombre, apellido, carreraEnum, carnet);
 
         if (ok) {
-            this.estudianteData = new EstudianteData(nombre.trim(), apellido.trim(), carreraEnum, carnet);
+            setNombre(nombre.trim());
+            setApellido(apellido.trim());
+            setCarrera(carreraEnum);
+            setCarnet(carnet);
             this.estudianteValido = true;
         } else {
             this.estudianteValido = false;
@@ -47,11 +48,10 @@ public class EstudianteUVG {
     }
 
     public EstudianteData getEstudianteData() {
-        return estudianteData;
+        return this;
     }
 
     public RegistrarEstudiante getRegistrarEstudiante() {
         return registrarEstudiante;
     }
 }
-

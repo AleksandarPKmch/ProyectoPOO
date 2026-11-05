@@ -1,42 +1,34 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class RegistrarEstudiante {
-    private List<EstudianteData> lista;
-
-    public RegistrarEstudiante() {
-        this.lista = new ArrayList<EstudianteData>();
-    }
-
+public class RegistrarEstudiante extends listaEstudiante {
     public boolean registrarEstudiante(String nombre, String apellido, Carrera carrera, int carnet) {
         if (carrera == null) return false;
         EstudianteData estudiante = new EstudianteData(nombre, apellido, carrera, carnet);
-        return lista.add(estudiante);
+        return super.addEstudiante(estudiante);
     }
 
     public boolean registrarEstudiante(String nombre, String apellido, String carreraTexto, int carnet) {
         Carrera carrera = Carrera.fromString(carreraTexto);
         if (carrera == null) return false;
         EstudianteData estudiante = new EstudianteData(nombre, apellido, carrera, carnet);
-        return lista.add(estudiante);
+        return super.addEstudiante(estudiante);
     }
 
     public boolean eliminarEstudiantePorCarnet(int carnet) {
-        return lista.removeIf(e -> e.getCarnet() == carnet);
+        boolean eliminado = false;
+        while (super.eliminarPorCarnet(carnet)) {
+            eliminado = true;
+        }
+        return eliminado;
     }
 
     public EstudianteData buscarEstudiantePorCarnet(int carnet) {
-        return lista.stream()
-                .filter(e -> e.getCarnet() == carnet)
-                .findFirst()
-                .orElse(null);
+        return super.buscarPorCarnet(carnet);
     }
 
     public void carnetEstudiante(int carnet) {
-        EstudianteData e = lista.stream()
-                .filter(est -> est.getCarnet() == carnet)
-                .findFirst()
-                .orElse(null);
+        EstudianteData e = buscarEstudiantePorCarnet(carnet);
         if (e != null) {
             System.out.println(e.toString());
         } else {
@@ -45,19 +37,15 @@ public class RegistrarEstudiante {
     }
 
     public void carreraEstudiante(Carrera carrera) {
-        List<EstudianteData> filtrados = lista.stream()
+        List<EstudianteData> filtrados = super.getCarreraEstudiante(carrera).stream()
                 .filter(e -> e.getCarrera() == carrera)
-                .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+                .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);;
         for (EstudianteData e : filtrados) {
             System.out.println(e.toString());
         }
     }
 
     public List<EstudianteData> getListaEstudiante() {
-        return lista;
-    }
-
-    public List<EstudianteData> getEstudiantes() {
-        return lista;
+        return super.getEstudiantes();
     }
 }
