@@ -6,22 +6,37 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/** Lee la cadena de conexion de la variable MONGO_URI o del archivo .env. */
+/**
+ * Lee la cadena de conexion de la variable de sistema MONGO_URI o MONGODB_URI,
+ * o de un archivo .env. La contrasena nunca va escrita en el codigo.
+ */
 public final class Config {
+
+    private static final String[] CLAVES = {"MONGO_URI", "MONGODB_URI"};
+    private static final String[] RUTAS = {".env", "carnets-uvg/.env", "../.env"};
 
     private Config() {
     }
 
     public static String mongoUri() {
-        String deSistema = System.getenv("MONGO_URI");
-        if (deSistema != null && !deSistema.trim().isEmpty()) {
-            return deSistema.trim();
+        for (String clave : CLAVES) {
+            String deSistema = System.getenv(clave);
+            if (deSistema != null && !deSistema.trim().isEmpty()) {
+                return deSistema.trim();
+            }
         }
-        return leerDeArchivoEnv("MONGO_URI");
+        for (String ruta : RUTAS) {
+            for (String clave : CLAVES) {
+                String valor = leerDeArchivoEnv(Paths.get(ruta), clave);
+                if (valor != null) {
+                    return valor;
+                }
+            }
+        }
+        return null;
     }
 
-    private static String leerDeArchivoEnv(String clave) {
-        Path archivo = Paths.get(".env");
+    private static String leerDeArchivoEnv(Path archivo, String clave) {
         if (!Files.isRegularFile(archivo)) {
             return null;
         }
